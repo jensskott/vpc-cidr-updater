@@ -5,8 +5,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-
-
 func (e *ec2Implementation) getAllRegions() ([]string, error) {
 	var regions []string
 	resp, err := e.svc.DescribeRegions(nil)
@@ -19,34 +17,27 @@ func (e *ec2Implementation) getAllRegions() ([]string, error) {
 	return regions, nil
 }
 
-func getAllVpcs(regions []string) ([]vpcInfo, error) {
+func (e *ec2Implementation) getVpcs(region string) ([]vpcInfo, error) {
 	var vpcs []vpcInfo
 
-	for _, r := range regions {
-		client := newClient(r)
+	resp, err := e.svc.DescribeVpcs(nil)
+	if err != nil {
+		return nil, err
+	}
 
-		resp, err := client.svc.DescribeVpcs(nil)
-		if err != nil {
-			return nil, err
-		}
-
-		for _, vpc := range resp.Vpcs {
-			if *vpc.IsDefault != true {
-				v := vpcInfo{
-					vpcCidr: *vpc.CidrBlock,
-					region:  r,
-				}
-				name := getNameTag(vpc.Tags)
-				v.vpcName = name
-				subnets, err := client.getSubnets(*vpc.VpcId)
-				if err != nil {
-					return nil, err
-				}
-				v.subnets = subnets
-				vpcs = append(vpcs, v)
+	for _, vpc := range resp.Vpcs {
+		if *vpc.IsDefault != true {
+			v := vpcInfo{
+				vpcCidr: *vpc.CidrBlock,
+				vpcID:   *vpc.VpcId,
+				region:  region,
 			}
+			name := getNameTag(vpc.Tags)
+			v.vpcName = name
+			vpcs = append(vpcs, v)
 		}
 	}
+
 	return vpcs, nil
 }
 
@@ -59,14 +50,14 @@ func getNameTag(tag []*ec2.Tag) string {
 }
 
 // TODO: Get all subnets of a vpc here
-func (e *ec2Implementation) getSubnets (vpcId string) ([]subnetInfo, error) {
+func (e *ec2Implementation) getSubnets(vpcID string) ([]subnetInfo, error) {
 	var subnets []subnetInfo
 
 	resp, err := e.svc.DescribeSubnets(&ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: aws.String("vpc-id"),
-				Values: []*string{aws.String(vpcId)},
+				Name:   aws.String("vpc-id"),
+				Values: []*string{aws.String(vpcID)},
 			},
 		},
 	})
@@ -77,6 +68,7 @@ func (e *ec2Implementation) getSubnets (vpcId string) ([]subnetInfo, error) {
 	for _, s := range resp.Subnets {
 		subs := &subnetInfo{
 			subnetCidr: *s.CidrBlock,
+			vpcID:      *s.VpcId,
 		}
 		names := getNameTag(s.Tags)
 		subs.subnetName = names

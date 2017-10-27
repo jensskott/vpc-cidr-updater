@@ -6,10 +6,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	log "github.com/sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
+	log "github.com/sirupsen/logrus"
 )
-
 
 type ec2Implementation struct {
 	session *session.Session
@@ -19,17 +18,23 @@ type ec2Implementation struct {
 type vpcInfo struct {
 	vpcName string
 	vpcCidr string
+	vpcID   string
 	region  string
-	subnets []subnetInfo
 }
 
 type subnetInfo struct {
 	subnetName string
 	subnetCidr string
+	vpcID      string
+}
+
+type allInfo struct {
+	vpcs    vpcInfo
+	subnets []subnetInfo
 }
 
 func main() {
-
+	var data []allInfo
 
 	client := newClient("eu-west-1")
 	regions, err := client.getAllRegions()
@@ -37,16 +42,28 @@ func main() {
 		log.WithField("message", "Could not describe aws regions").Fatal(err)
 	}
 
+	for _, r := range regions {
+		client := newClient(r)
+		// Describe all vpc info
+		vpcs, err := client.getVpcs(r)
+		if err != nil {
+			log.WithField("message", "Could not describe aws vpcs").Fatal(err)
+		}
 
-	// Describe all vpc info
-	vpcs, err := getAllVpcs(regions)
-	if err != nil {
-		log.WithField("message", "Could not describe aws vpcs").Fatal(err)
+		for _, s := range vpcs {
+			d := &allInfo{
+				vpcs: s,
+			}
+			subnets, err := client.getSubnets(s.vpcID)
+			if err != nil {
+				log.WithField("message", "Could not describe aws subnets").Fatal(err)
+			}
+			d.subnets = subnets
+
+			data = append(data, *d)
+		}
 	}
-	for _, r := range vpcs {
-		out := fmt.Sprintf("VPC INFO Region: %s Name: %s, Cidr: %s \n Subnets: %v", r.region, r.vpcName, r.vpcCidr, r.subnets)
-		fmt.Println(out)
-	}
+	fmt.Println(data)
 }
 
 func newClient(region string) ec2Implementation {
@@ -55,5 +72,3 @@ func newClient(region string) ec2Implementation {
 	ec2Client.svc = ec2.New(ec2Client.session)
 	return ec2Client
 }
-
-
