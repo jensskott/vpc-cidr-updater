@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/alecthomas/template"
+  packages = [".","parse"]
+  revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/alecthomas/units"
+  packages = ["."]
+  revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
+
+[[projects]]
   name = "github.com/aws/aws-sdk-go"
   packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/stscreds","aws/defaults","aws/ec2metadata","aws/endpoints","aws/request","aws/session","aws/signer/v4","internal/shareddefaults","private/protocol","private/protocol/ec2query","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/xml/xmlutil","service/ec2","service/ec2/ec2iface","service/sts"]
   revision = "ee1f179877b2daf2aaabf71fa900773bf8842253"
@@ -24,12 +36,6 @@
   packages = ["gomock"]
   revision = "13f360950a79f5864a972c786a10a50e44b69541"
   version = "v1.0.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/jensskott/vpc-cidr-updater"
-  packages = ["mocks"]
-  revision = "56b1c701fbe478bb547887017b0cbdb6bb21848d"
 
 [[projects]]
   name = "github.com/jmespath/go-jmespath"
@@ -66,9 +72,15 @@
   packages = ["unix","windows"]
   revision = "80ad69fa329a43e6f28c61c48325527739bb1560"
 
+[[projects]]
+  name = "gopkg.in/alecthomas/kingpin.v2"
+  packages = ["."]
+  revision = "1087e65c9441605df944fb12c33f0fe7072d18ca"
+  version = "v2.2.5"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "34580478f8349237bda189d36c49a44ec75694e750dc9683a0c3bf337216d781"
+  inputs-digest = "84a238e7e79850b985d1ba0cf4ebb11e680be3eb46ec7ac126231409871e7ff7"
   solver-name = "gps-cdcl"
   solver-version = 1

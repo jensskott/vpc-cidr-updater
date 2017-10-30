@@ -6,11 +6,16 @@ import (
 )
 
 func (e *ec2Implementation) getAllRegions() ([]string, error) {
+	// Create a slice for all regions
 	var regions []string
+
+	// List all regions for ec2
 	resp, err := e.svc.DescribeRegions(nil)
 	if err != nil {
 		return nil, err
 	}
+
+	// Append all regions in response to slice
 	for _, r := range resp.Regions {
 		regions = append(regions, *r.RegionName)
 	}
@@ -18,13 +23,16 @@ func (e *ec2Implementation) getAllRegions() ([]string, error) {
 }
 
 func (e *ec2Implementation) getVpcs(region string) ([]vpcInfo, error) {
+	// Create slice for vpc info
 	var vpcs []vpcInfo
 
+	// Describe all vpcs in region
 	resp, err := e.svc.DescribeVpcs(nil)
 	if err != nil {
 		return nil, err
 	}
 
+	// if not default vpc add to vpc info struct
 	for _, vpc := range resp.Vpcs {
 		if *vpc.IsDefault != true {
 			v := vpcInfo{
@@ -42,6 +50,7 @@ func (e *ec2Implementation) getVpcs(region string) ([]vpcInfo, error) {
 }
 
 func getNameTag(tag []*ec2.Tag) string {
+	// Get the name tag from vpc tags
 	for _, t := range tag {
 		return *t.Value
 	}
@@ -49,10 +58,11 @@ func getNameTag(tag []*ec2.Tag) string {
 	return ""
 }
 
-// TODO: Get all subnets of a vpc here
 func (e *ec2Implementation) getSubnets(vpcID string) ([]subnetInfo, error) {
+	// Create subnetInfo slice
 	var subnets []subnetInfo
 
+	// Describe all subnets for the vpcID provided
 	resp, err := e.svc.DescribeSubnets(&ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
@@ -65,6 +75,7 @@ func (e *ec2Implementation) getSubnets(vpcID string) ([]subnetInfo, error) {
 		return nil, err
 	}
 
+	// Add subnets to subnetInfo slice
 	for _, s := range resp.Subnets {
 		subs := &subnetInfo{
 			subnetCidr: *s.CidrBlock,
