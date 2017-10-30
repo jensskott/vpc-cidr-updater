@@ -1,16 +1,13 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/alecthomas/kingpin.v2"
-)
-
-var (
-	account = kingpin.Arg("account", "Account number.").Required().String()
 )
 
 // Ec2 Implementation
@@ -41,9 +38,8 @@ type allInfo struct {
 }
 
 func main() {
-	// Parse kingpin variables
-	kingpin.Version("0.0.1")
-	kingpin.Parse()
+	account := flag.String("account", "", "Account number")
+	flag.Parse()
 
 	// Create map for vpc data
 	var data map[string]*allInfo

@@ -17,9 +17,7 @@ vet:
 
 mockgen:
 	@echo "Generating mocks..."
-	mockgen -source=sqsmgmt/sqs-manager.go -destination=$(MOCK_DIR)/mock-sqs-manager.go -package=mocks
-	mockgen -source=acmmgmt/acm-manager.go -destination=$(MOCK_DIR)/mock-acm-manager.go -package=mocks
-	mockgen -source=vendor/github.com/aws/aws-sdk-go/service/sqs/sqsiface/interface.go -destination=$(MOCK_DIR)/mock-sqsiface.go -package=mocks
+	mockgen -source=vendor/github.com/aws/aws-sdk-go/service/ec2/ec2iface/interface.go -destination=$(MOCK_DIR)/mock-ec2iface.go -package=mocks
 
 test: mockgen
 	@go test
