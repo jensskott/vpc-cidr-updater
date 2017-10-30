@@ -26,6 +26,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/jensskott/vpc-cidr-updater"
+  packages = ["mocks"]
+  revision = "56b1c701fbe478bb547887017b0cbdb6bb21848d"
+
+[[projects]]
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
   revision = "0b12d6b5"
@@ -63,6 +69,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e7df4471d2284330fe3558218f85c9b6355e6e5974d0d27294da480b02f2e5fe"
+  inputs-digest = "34580478f8349237bda189d36c49a44ec75694e750dc9683a0c3bf337216d781"
   solver-name = "gps-cdcl"
   solver-version = 1

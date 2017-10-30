@@ -16,6 +16,7 @@ func TestGetAllVpcs(t *testing.T) {
 			{
 				CidrBlock: aws.String("10.1.0.0/16"),
 				VpcId:     aws.String("vpc-7d5e1719"),
+				IsDefault: aws.Bool(false),
 				Tags: []*ec2.Tag{
 					{
 						Key:   aws.String("Name"),
