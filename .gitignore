@@ -19,3 +19,6 @@ vendor/**
 .vscode/
 
 *.csv
+
+# Mac files
+.DS_Store

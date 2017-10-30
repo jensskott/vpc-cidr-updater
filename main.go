@@ -41,6 +41,10 @@ func main() {
 	account := flag.String("account", "", "Account number")
 	flag.Parse()
 
+	if *account == "" {
+		log.Fatal("missing required flag -account")
+	}
+
 	// Create map for vpc data
 	var data map[string]*allInfo
 	data = make(map[string]*allInfo)
