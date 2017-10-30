@@ -52,9 +52,11 @@ func (e *ec2Implementation) getVpcs(region string) ([]vpcInfo, error) {
 func getNameTag(tag []*ec2.Tag) string {
 	// Get the name tag from vpc tags
 	for _, t := range tag {
-		return *t.Value
+		if *t.Key == "Name" {
+			return *t.Value
+		}
+		continue
 	}
-
 	return ""
 }
 

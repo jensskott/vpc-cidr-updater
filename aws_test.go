@@ -97,6 +97,10 @@ func TestGetSubnets(t *testing.T) {
 						Key:   aws.String("Name"),
 						Value: aws.String("test-vpc-subnet"),
 					},
+					{
+						Key:   aws.String("builder"),
+						Value: aws.String("manual"),
+					},
 				},
 			},
 		},

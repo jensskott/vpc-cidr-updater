@@ -1,4 +1,4 @@
-.PHONY: all vet mockgen test run build package clean
+.PHONY: all vet mockgen test run build package clean install
 
 APP_NAME=vpc-updater
 APP_VERSION=0.0.1
@@ -10,7 +10,7 @@ BUILD_DIR=build
 BINARY_NAME=$(APP_NAME)
 MOCK_DIR=mocks
 
-all: clean build package
+all: clean build package install
 
 vet:
 	@go vet
@@ -21,6 +21,9 @@ mockgen:
 
 test: mockgen
 	@go test
+
+install:
+	cp $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64 /usr/local/bin/$(BINARY_NAME)
 
 run:
 	go run ./*.go $(RUN_ARGS)
@@ -37,4 +40,4 @@ package:
 	zip -q -j  $(BUILD_DIR)/$(BINARY_NAME)-$(APP_VERSION)-windows-amd64.zip $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64
 
 clean:
-	rm -Rf $(BUILD_DIR)
+	rm -Rf $(BUILD_DIR)s
